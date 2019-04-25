@@ -168,7 +168,7 @@ function Main{
 		
 		echo ""
 		write-host "Recommended interval: 60"
-		Write-host "Incase of high intensity logging lower the time interval"
+		Write-host "Lower the time interval for environments with a high log volume"
 		echo ""
 		
 		$IntervalMinutes = read-host "Please enter a timeinterval"
@@ -285,7 +285,7 @@ function Main{
 			$CurrentStart = $CurrentEnd
 			$Backupdate = $CurrentEnd}
 		
-		#MD5 hash calculation for the output files
+		#SHA256 hash calculation for the output files
 		$HASHValues = Join-Path $PSScriptRoot "\Log_Directory\Hashes.csv"
 		Get-ChildItem $LogDirectoryPath -Filter *AuditRecords.csv | Get-FileHash -Algorithm SHA256 | epcsv $HASHValues
 
@@ -333,7 +333,7 @@ function Main{
 		
 		echo ""
 		write-host "Recommended interval is 60"
-		Write-host "In case of high volume logging use a small time interval"
+		Write-host "Lower the time interval for environments with a high log volume"
 		echo ""
 		
 		$IntervalMinutes = read-host "Please enter a time interval"
@@ -428,7 +428,6 @@ function Main{
 							if($results){
 								$results | epcsv $OutputFile -NoTypeInformation -Append
 							}
-
 							write-host "Quiting.." -ForegroundColor Red
 							break
 							Menu
@@ -470,7 +469,7 @@ function Main{
 							Write-Host "No logs available for $record"  -ForegroundColor red
 							echo ""}}
 							
-					#MD5 hash calculation for the output files
+					#SHA256 hash calculation for the output files
 					$HASHValues = Join-Path $PSScriptRoot "\Log_Directory\Hashes.csv"
 					Get-ChildItem $LogDirectoryPath -Filter *_AuditRecords.csv | Get-FileHash -Algorithm SHA256 | epcsv $HASHValues
 					
@@ -505,7 +504,7 @@ function Main{
 		
 		echo ""
 		write-host "Recommended interval is 60"
-		Write-host "In case of high volume logging use a small time interval"
+		Write-host "Lower the time interval for environments with a high log volume"
 		echo ""
 		
 		$IntervalMinutes = read-host "Please enter a timeinterval"
@@ -606,6 +605,7 @@ function Main{
 					if($results){
 						$results | epcsv $OutputFile -NoTypeInformation -Append
 					}
+
 					write-host "Quiting.." -ForegroundColor Red
 					break
 					Menu
@@ -647,7 +647,7 @@ function Main{
 					Write-Host "No logs available for $record"  -ForegroundColor red
 					echo ""}}
 			
-			#MD5 hash calculation for the output files
+			#SHA256 hash calculation for the output files
 			$HASHValues = Join-Path $PSScriptRoot "\Log_Directory\Hashes.csv"
 			Get-ChildItem $LogDirectoryPath -Filter *_AuditRecords.csv | Get-FileHash -Algorithm SHA256 | epcsv $HASHValues -NoTypeInformation -Append	
 			
