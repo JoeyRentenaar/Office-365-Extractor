@@ -658,7 +658,7 @@ function Main{
 	"5" {
 @"
 		
-For a full readme please visit our Github page https://github.pwc.com/PwC-IR/Office-365-Extractor
+For a full readme please visit our Github page https://github.com/jrentenaar/Office-365-Extractor
 
 Description of the tool:
 For incident response or audit purposes the Microsoft Audit log contains important information. This tool helps you to acquire the logs with their hash values. 
