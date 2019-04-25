@@ -50,7 +50,7 @@ $menupart1=@"
                                                                                                                                     
                                                                                                                                     
 Script created by Joey Rentenaar & Korstiaan Stam @ PwC Incident Response Netherlands
-Visit our Github https://github.pwc.com/PwC-IR/Office-365-Extractor for the full readme
+Visit our Github github.com/jrentenaar/Office-365-Extractor for the full readme
 
 "@
 
@@ -168,7 +168,7 @@ function Main{
 		
 		echo ""
 		write-host "Recommended interval: 60"
-		Write-host "Lower the time interval for environments with a high log volume"
+		Write-host "Incase of high intensity logging lower the time interval"
 		echo ""
 		
 		$IntervalMinutes = read-host "Please enter a timeinterval"
@@ -285,7 +285,7 @@ function Main{
 			$CurrentStart = $CurrentEnd
 			$Backupdate = $CurrentEnd}
 		
-		#SHA256 hash calculation for the output files
+		#MD5 hash calculation for the output files
 		$HASHValues = Join-Path $PSScriptRoot "\Log_Directory\Hashes.csv"
 		Get-ChildItem $LogDirectoryPath -Filter *AuditRecords.csv | Get-FileHash -Algorithm SHA256 | epcsv $HASHValues
 
@@ -333,7 +333,7 @@ function Main{
 		
 		echo ""
 		write-host "Recommended interval is 60"
-		Write-host "Lower the time interval for environments with a high log volume"
+		Write-host "In case of high volume logging use a small time interval"
 		echo ""
 		
 		$IntervalMinutes = read-host "Please enter a time interval"
@@ -428,6 +428,7 @@ function Main{
 							if($results){
 								$results | epcsv $OutputFile -NoTypeInformation -Append
 							}
+
 							write-host "Quiting.." -ForegroundColor Red
 							break
 							Menu
@@ -469,7 +470,7 @@ function Main{
 							Write-Host "No logs available for $record"  -ForegroundColor red
 							echo ""}}
 							
-					#SHA256 hash calculation for the output files
+					#MD5 hash calculation for the output files
 					$HASHValues = Join-Path $PSScriptRoot "\Log_Directory\Hashes.csv"
 					Get-ChildItem $LogDirectoryPath -Filter *_AuditRecords.csv | Get-FileHash -Algorithm SHA256 | epcsv $HASHValues
 					
@@ -504,7 +505,7 @@ function Main{
 		
 		echo ""
 		write-host "Recommended interval is 60"
-		Write-host "Lower the time interval for environments with a high log volume"
+		Write-host "In case of high volume logging use a small time interval"
 		echo ""
 		
 		$IntervalMinutes = read-host "Please enter a timeinterval"
@@ -605,7 +606,6 @@ function Main{
 					if($results){
 						$results | epcsv $OutputFile -NoTypeInformation -Append
 					}
-
 					write-host "Quiting.." -ForegroundColor Red
 					break
 					Menu
@@ -647,7 +647,7 @@ function Main{
 					Write-Host "No logs available for $record"  -ForegroundColor red
 					echo ""}}
 			
-			#SHA256 hash calculation for the output files
+			#MD5 hash calculation for the output files
 			$HASHValues = Join-Path $PSScriptRoot "\Log_Directory\Hashes.csv"
 			Get-ChildItem $LogDirectoryPath -Filter *_AuditRecords.csv | Get-FileHash -Algorithm SHA256 | epcsv $HASHValues -NoTypeInformation -Append	
 			
