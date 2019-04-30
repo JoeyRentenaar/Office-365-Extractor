@@ -91,9 +91,7 @@ function Main{
 	$LogDirectoryPath = Join-Path $PSScriptRoot $LogDirectory
 	$LogFile = Join-Path $PSScriptRoot $AuditLog
 	$OutputDirectory = Join-Path $PSScriptRoot $OutputFileNumberAuditlogs
-	$OutputFile = Join-Path $PSScriptRoot $CSVoutput
-	$script:DateFormat = (Get-culture).DateTimeFormat.ShortDatePattern
-	
+	$OutputFile = Join-Path $PSScriptRoot $CSVoutput	
 
 	#The maximum number of results Microsoft allows is 5000 for each PowerShell session.
 	$ResultSize = 5000

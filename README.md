@@ -109,7 +109,7 @@ It can take up to 24 hours before an event is stored in the UAL.
 <br>
 
 <b>Which date format does the script accepts as input?</b><br>
-The script will tell what the correct format is based on your Regional computer settings.For Start and End data variables it will show between brackets what the format is. For example, if the computer is configured to use the short date format mm/dd/yyyy, enter 09/01/2018 00:00 to specify September 1, 2018. You can enter the date only, or you can enter the date and time of day.<br>
+The script will tell what the correct date format is. For Start and End data variables it will show between brackets what the format is (yyyy-MM-dd).<br>
 <br>
 
 <b>Do I need to configure the time period?</b><br>
