@@ -111,7 +111,7 @@ function Main{
 	#Show available log sources and amount of logs
 	"1" {
 		$StartDate = Get-StartDate
-        $EndDate = Get-EndDate
+		$EndDate = Get-EndDate
 		
 		Write-Host "Calculating the number of audit logs" -ForegroundColor Green
 		$UserCredential = Get-Credential
@@ -170,7 +170,7 @@ function Main{
 		echo ""
 		
 		$StartDate = Get-StartDate
-        $EndDate = Get-EndDate
+		$EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval: 60"
@@ -326,7 +326,7 @@ function Main{
 			Menu}
 				
 		$StartDate = Get-StartDate
-        $EndDate = Get-EndDate
+		$EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval is 60"
@@ -488,7 +488,7 @@ function Main{
 		echo ""
 		
 		$StartDate = Get-StartDate
-        $EndDate = Get-EndDate
+		$EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval is 60"
