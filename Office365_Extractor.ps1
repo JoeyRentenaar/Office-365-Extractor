@@ -58,6 +58,30 @@ Clear-Host
 $menupart1
 
 
+function Get-startDate{
+    Do {    
+	    $DateStart= read-host "Please enter start date (format: yyyy-MM-dd) or ENTER for maximum 90 days"
+        if ([string]::IsNullOrWhiteSpace($DateEnd)) { $DateStart = [datetime]::Now.ToUniversalTime().AddDays(-90) }
+		$StartDate = $DateStart -as [datetime]
+		if (!$StartDate) { "Not A valid date and time"}
+	} while ($StartDate -isnot [datetime])	
+   
+    return Get-Date $startDate -Format yyyy-MM-dd
+}
+
+
+function Get-endDate{
+    Do {    
+        $DateEnd= read-host "Please enter end date (format: yyyy-MM-dd) or ENTER for today"
+        if ([string]::IsNullOrWhiteSpace($DateEnd)) { $DateEnd =  [datetime]::Now.ToUniversalTime() }
+		$EndDate = $DateEnd -as [datetime]
+		if (!$EndDate) { "Not A valid date and time"}
+    } while ($EndDate -isnot [datetime])
+
+    return Get-Date $endDate -Format yyyy-MM-dd
+}
+
+
 function Main{
 	####################Configuration settings####################
 	$OutputFileNumberAuditlogs = "\Log_Directory\Amount_Of_Audit_Logs.csv"
@@ -86,17 +110,8 @@ function Main{
 	Switch ($script:input){
 	#Show available log sources and amount of logs
 	"1" {
-		do{    
-		$DateStart= read-host "Please enter start date (Format: $script:DateFormat)"
-		$StartDate = $DateStart -as [datetime]
-		if (!$StartDate) { "Not A valid date and time"}
-		} while ($StartDate -isnot [datetime])
-		
-		do{    
-		$DateEnd= read-host "Please enter end date (Format: $script:DateFormat)  "
-		$EndDate = $DateEnd -as [datetime]
-		if (!$EndDate) { "Not A valid date and time"}
-		} while ($EndDate -isnot [datetime])
+		$StartDate = Get-StartDate
+        $EndDate = Get-EndDate
 		
 		Write-Host "Calculating the number of audit logs" -ForegroundColor Green
 		$UserCredential = Get-Credential
@@ -154,17 +169,8 @@ function Main{
 			$OutputDirectory = Join-Path $PSScriptRoot $OutputFile}
 		echo ""
 		
-		do{    
-		$DateStart= read-host "Please enter start date (format: $script:DateFormat)"
-		$StartDate = $DateStart -as [datetime]
-		if (!$StartDate) { "Not A valid date and time"}
-		} while ($StartDate -isnot [datetime])
-		
-		do{    
-		$DateEnd= read-host "Please enter end date (format: $script:DateFormat)  "
-		$EndDate = $DateEnd -as [datetime]
-		if (!$EndDate) { "Not A valid date and time"}
-		} while ($EndDate -isnot [datetime])
+		$StartDate = Get-StartDate
+        $EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval: 60"
@@ -319,17 +325,8 @@ function Main{
 		ELSE{
 			Menu}
 				
-		do{    
-		$DateStart= read-host "Please enter start date (Format: $script:DateFormat)"
-		$StartDate = $DateStart -as [datetime]
-		if (!$StartDate) { "Not A valid date and time"}
-		} while ($StartDate -isnot [datetime])
-		
-		do{    
-		$DateEnd= read-host "Please enter end date (Format: $script:DateFormat)  "
-		$EndDate = $DateEnd -as [datetime]
-		if (!$EndDate) { "Not A valid date and time"}
-		} while ($EndDate -isnot [datetime])
+		$StartDate = Get-StartDate
+        $EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval is 60"
@@ -490,17 +487,8 @@ function Main{
 		$RecordTypes = read-host ">"
 		echo ""
 		
-		do{    
-		$DateStart= read-host "Please enter start date (Format: $script:DateFormat)"
-		$StartDate = $DateStart -as [datetime]
-		if (!$StartDate) { "Not A valid date and time"}
-		} while ($StartDate -isnot [datetime])
-		
-		do{    
-		$DateEnd= read-host "Please enter end date (Format: $script:DateFormat)  "
-		$EndDate = $DateEnd -as [datetime]
-		if (!$EndDate) { "Not A valid date and time"}
-		} while ($EndDate -isnot [datetime])
+		$StartDate = Get-StartDate
+        $EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval is 60"
