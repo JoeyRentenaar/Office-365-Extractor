@@ -61,7 +61,7 @@ $menupart1
 function Get-startDate{
     Do {    
 	    $DateStart= read-host "Please enter start date (format: yyyy-MM-dd) or ENTER for maximum 90 days"
-        if ([string]::IsNullOrWhiteSpace($DateEnd)) { $DateStart = [datetime]::Now.ToUniversalTime().AddDays(-90) }
+        if ([string]::IsNullOrWhiteSpace($DateStart)) { $DateStart = [datetime]::Now.ToUniversalTime().AddDays(-90) }
 		$StartDate = $DateStart -as [datetime]
 		if (!$StartDate) { "Not A valid date and time"}
 	} while ($StartDate -isnot [datetime])	
