@@ -66,7 +66,7 @@ function Get-startDate{
 		if (!$StartDate) { "Not A valid date and time"}
 	} while ($StartDate -isnot [datetime])	
    
-    return Get-Date $startDate -Format yyyy-MM-dd
+    return Get-Date $startDate -Format "yyyy-MM-dd HH:mm:ss"
 }
 
 
@@ -78,7 +78,7 @@ function Get-endDate{
 		if (!$EndDate) { "Not A valid date and time"}
     } while ($EndDate -isnot [datetime])
 
-    return Get-Date $endDate -Format yyyy-MM-dd
+    return Get-Date $EndDate -Format "yyyy-MM-dd HH:mm:ss"
 }
 
 
@@ -111,7 +111,6 @@ function Main{
 		$StartDate = Get-StartDate
 		$EndDate = Get-EndDate
 		
-		Write-Host "Calculating the number of audit logs" -ForegroundColor Green
 		$UserCredential = Get-Credential
 		$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
 		Import-PSSession $Session
@@ -132,6 +131,7 @@ function Main{
 		Write-Host "---------------------------------------------------------------------------" 
 		echo ""
 
+		Write-Host "Calculating the number of audit logs" -ForegroundColor Green
 		$TotalCount = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -ResultSize 1 | out-string -Stream | select-string ResultCount
 
 		Foreach ($record in $RecordTypes){
@@ -167,20 +167,20 @@ function Main{
 			$OutputDirectory = Join-Path $PSScriptRoot $OutputFile}
 		echo ""
 		
-		$StartDate = Get-StartDate
-		$EndDate = Get-EndDate
+		[DateTime]$StartDate = Get-StartDate
+		[DateTime]$EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval: 60"
 		Write-host "Lower the time interval for environments with a high log volume"
 		echo ""
 		
-		$IntervalMinutes = read-host "Please enter a timeinterval"
+		$IntervalMinutes = read-host "Please enter a time interval"
 		$ResetInterval = $IntervalMinutes
 		
 		Write-LogFile "Start date provided by user: $StartDate"
 		Write-LogFile "End date provided by user: $EndDate"
-		Write-Logfile "TimeInterval provided by user: $IntervalMinutes"
+		Write-Logfile "Time interval provided by user: $IntervalMinutes"
 		[DateTime]$CurrentStart = $StartDate
 		[DateTime]$CurrentEnd = $EndDate
 		
@@ -190,8 +190,8 @@ function Main{
 
 		echo ""
 		Write-Host "------------------------------------------------------------------------------------------"
-		Write-Host "|Extracting all available audit logs between "$StartDate" and "$EndDate"|"
-		write-host "|TimeInterval: $IntervalMinutes                                                                        |"
+		Write-Host "|Extracting all available audit logs between "$StartDate" and "$EndDate                "|"
+		write-host "|Time interval: $IntervalMinutes                                                                        |"
 		Write-Host "------------------------------------------------------------------------------------------" 
 		echo ""
 		 
@@ -209,8 +209,12 @@ function Main{
 						$number = $AmountResults.tostring().split(":")[1]
 						$script:integer = [int]$number
 						if ($script:integer -lt 5000){
-							write-host "INFO: Temporary lowering timeinterval to $IntervalMinutes minutes" -ForegroundColor Yellow
-							}
+							if ($IntervalMinutes -eq 0){
+								Exit
+								}
+							else{
+								write-host "INFO: Temporary lowering time interval to $IntervalMinutes minutes" -ForegroundColor Yellow
+								}}
 						else{
 							$IntervalMinutes = $IntervalMinutes / 2
 							$CurrentEnd = $CurrentStart.AddMinutes($IntervalMinutes)}}
@@ -239,8 +243,12 @@ function Main{
 				$CurrentStart = $Backupdate
 				
 				$IntervalMinutes = $durmin /2
-				write-host "INFO: Temporary lowering time interval to $IntervalMinutes minutes" -ForegroundColor Yellow
-				$CurrentEnd = $CurrentEnd.AddMinutes($IntervalMinutes)}
+				if ($IntervalMinutes -eq 0){
+					Exit}
+				else{
+					write-host "INFO: Temporary lowering time interval to $IntervalMinutes minutes" -ForegroundColor Yellow
+					$CurrentEnd = $CurrentEnd.AddMinutes($IntervalMinutes)}
+					}
 			
 			ELSEIF($CurrentEnd -eq $EndDate){
 				Write-LogFile "INFO: Retrieving audit logs between $($CurrentStart) and $($CurrentEnd)"
@@ -287,7 +295,7 @@ function Main{
 					break}}
 			
 			$CurrentStart = $CurrentEnd
-			$Backupdate = $CurrentEnd}
+			[DateTime]$Backupdate = $CurrentEnd}
 		
 		#SHA256 hash calculation for the output files
 		$HASHValues = Join-Path $PSScriptRoot "\Log_Directory\Hashes.csv"
@@ -323,8 +331,8 @@ function Main{
 		ELSE{
 			Menu}
 				
-		$StartDate = Get-StartDate
-		$EndDate = Get-EndDate
+		[DateTime]$StartDate = Get-StartDate
+		[DateTime]$EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval is 60"
@@ -337,7 +345,7 @@ function Main{
 		
 		Write-LogFile "Start date provided by user: $StartDate"
 		Write-LogFile "End date provided by user: $EndDate"
-		Write-Logfile "TimeInterval provided by user: $IntervalMinutes"
+		Write-Logfile "Time interval provided by user: $IntervalMinutes"
 		
 		$UserCredential = Get-Credential
 		$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
@@ -346,10 +354,10 @@ function Main{
 		echo ""
 		Write-Host "----------------------------------------------------------------------------"
 		Write-Host "|Extracting audit logs between "$StartDate" and "$EndDate"|"
-		write-host "|TimeInterval: $IntervalMinutes                                                                        |"
+		write-host "|Time interval: $IntervalMinutes                                                                       |"
 		Write-Host "----------------------------------------------------------------------------" 
 
-		Write-Host "The following RecordTypes are configured to be extracted in the script:" -ForegroundColor Green
+		Write-Host "The following RecordTypes are configured to be extracted:" -ForegroundColor Green
 		Foreach ($record in $RecordTypes){
 			Write-Host "-$record"}
 		echo ""
@@ -384,7 +392,10 @@ function Main{
 									$number = $AmountResults.tostring().split(":")[1]
 									$script:integer = [int]$number
 									if ($script:integer -lt 5000){
-										write-host "INFO: Temporary lowering timeinterval to $IntervalMinutes minutes" -ForegroundColor Yellow}
+										if ($IntervalMinutes -eq 0){
+											Exit}
+										else{
+											write-host "INFO: Temporary lowering time interval to $IntervalMinutes minutes" -ForegroundColor Yellow}}
 									else{
 										$IntervalMinutes = $IntervalMinutes / 2
 										$CurrentEnd = $CurrentStart.AddMinutes($IntervalMinutes)}}
@@ -412,7 +423,12 @@ function Main{
 							$CurrentStart = $Backupdate
 							
 							$IntervalMinutes = $durmin /2
-							write-host "INFO: Temporary lowering timeinterval to $IntervalMinutes minutes" -ForegroundColor Yellow
+							if ($IntervalMinutes -eq 0){
+								Exit
+								}
+							else{
+								write-host "INFO: Temporary lowering time interval to $IntervalMinutes minutes" -ForegroundColor Yellow
+								}
 							$CurrentEnd = $CurrentEnd.AddMinutes($IntervalMinutes)}
 						
 						ELSEIF($CurrentEnd -eq $EndDate){
@@ -458,7 +474,7 @@ function Main{
 								break}}
 							
 						$CurrentStart = $CurrentEnd
-						$Backupdate = $CurrentEnd}}
+						[DateTime]$Backupdate = $CurrentEnd}}
 						
 						else{
 							Write-Host "No logs available for $record"  -ForegroundColor red
@@ -485,15 +501,15 @@ function Main{
 		$RecordTypes = read-host ">"
 		echo ""
 		
-		$StartDate = Get-StartDate
-		$EndDate = Get-EndDate
+		[DateTime]$StartDate = Get-StartDate
+		[DateTime]$EndDate = Get-EndDate
 		
 		echo ""
 		write-host "Recommended interval is 60"
 		Write-host "Lower the time interval for environments with a high log volume"
 		echo ""
 		
-		$IntervalMinutes = read-host "Please enter a timeinterval"
+		$IntervalMinutes = read-host "Please enter a time interval"
 		$ResetInterval = $IntervalMinutes
 		
 		Write-LogFile "Start date provided by user: $StartDate"
@@ -507,10 +523,10 @@ function Main{
 		echo ""
 		Write-Host "----------------------------------------------------------------------------"
 		Write-Host "|Extracting audit logs between "$StartDate" and "$EndDate"|"
-		write-host "|TimeInterval: $IntervalMinutes                                                                        |"
+		write-host "|Time interval: $IntervalMinutes                                                                       |"
 		Write-Host "----------------------------------------------------------------------------" 
 
-		Write-Host "The following RecordTypes are configured to be extracted in the script:" -ForegroundColor Green
+		Write-Host "The following RecordTypes are configured to be extracted:" -ForegroundColor Green
 		
 		Foreach ($record in $RecordTypes.Split(",")){
 			Write-Host "-$record"}
@@ -552,7 +568,10 @@ function Main{
 							$number = $AmountResults.tostring().split(":")[1]
 							$script:integer = [int]$number
 							if ($script:integer -lt 5000){
-								write-host "INFO: Temporary lowering timeinterval to $IntervalMinutes minutes" -ForegroundColor Yellow}
+								if ($IntervalMinutes -eq 0){
+									Exit}
+								else{
+									write-host "INFO: Temporary lowering time interval to $IntervalMinutes minutes" -ForegroundColor Yellow}}
 							else{
 								$IntervalMinutes = $IntervalMinutes / 2
 								$CurrentEnd = $CurrentStart.AddMinutes($IntervalMinutes)}}
@@ -572,7 +591,7 @@ function Main{
 				ELSE{
 					$IntervalMinutes = $ResetInterval}
 
-				if ($CurrentEnd -gt $EndDate){				
+				if ($CurrentEnd -gt $EndDate){	
 					$DURATION = $EndDate - $Backupdate
 					$durmin = $DURATION.TotalMinutes
 					
@@ -580,14 +599,18 @@ function Main{
 					$CurrentStart = $Backupdate
 					
 					$IntervalMinutes = $durmin /2
-					write-host "INFO: Temporary lowering timeinterval to $IntervalMinutes minutes" -ForegroundColor Yellow
+					if ($IntervalMinutes -eq 0){
+						Exit}
+					else{
+						write-host "INFO: Temporary lowering time interval to $IntervalMinutes minutes" -ForegroundColor Yellow}
+						
 					$CurrentEnd = $CurrentEnd.AddMinutes($IntervalMinutes)}
 				
 				ELSEIF($CurrentEnd -eq $EndDate){
 					Write-LogFile "INFO: Retrieving audit logs between $($CurrentStart) and $($CurrentEnd)"
 					Write-Host "INFO: Retrieving audit logs between $($CurrentStart) and $($CurrentEnd)" -ForegroundColor green
 					
-					[Array]$results = Search-UnifiedAuditLog -StartDate $CurrentStart -EndDate $CurrentEnd -SessionID $SessionID -SessionCommand ReturnNextPreviewPage -ResultSize $ResultSize
+					[Array]$results = Search-UnifiedAuditLog -StartDate $CurrentStart -EndDate $CurrentEnd -RecordType $record -SessionID $SessionID -SessionCommand ReturnNextPreviewPage -ResultSize $ResultSize
 					if($results){
 						$results | epcsv $OutputFile -NoTypeInformation -Append
 					}
@@ -627,7 +650,7 @@ function Main{
 						break}}
 					
 				$CurrentStart = $CurrentEnd
-				$Backupdate = $CurrentEnd}}
+				[DateTime]$Backupdate = $CurrentEnd}}
 				
 				else{
 					Write-Host "No logs available for $record"  -ForegroundColor red
