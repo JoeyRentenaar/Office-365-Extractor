@@ -96,7 +96,6 @@ WorkplaceAnalytics<br>
 PowerAppsApp<br>
 PowerAppsPlan<br>
 ThreatIntelligenceAtpContent<br>
-LabelExplorer<br>
 TeamsHealthcare<br>
 ExchangeItemAggregated<br>
 HygieneEvent<br>
@@ -115,6 +114,19 @@ DLPEndpoint<br>
 AirInvestigation<br>
 Quarantine<br>
 MicrosoftForms<br>
+LabelContentExplorer<br>
+ApplicationAudit<br>
+ComplianceSupervisionExchange<br>
+CustomerKeyServiceEncryption<br>
+OfficeNative<br>
+MipAutoLabelSharePointItem<br>
+MipAutoLabelSharePointPolicyLocation<br>
+MicrosoftTeamsShifts<br>
+MipAutoLabelExchangeItem<br>
+CortanaBriefing<br>
+Search<br>
+WDATPAlerts<br>
+MDATPAudit<br>
 
 <h3>Frequently Asked Questions</h3>
 <b>If I enable mailbox auditing now can I see historical records?</b><br>
