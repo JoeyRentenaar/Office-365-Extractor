@@ -1,4 +1,4 @@
-Since we both left PwC the script is not being mainteind anymore. Check the PwC-IR Github for the latest version.
+<h1>Since we both left PwC the script is not being mainteind anymore. Check the PwC-IR Github for the latest version.<h1>
 
 <h3>Office 365 Extractor</h3>
 This script makes it possible to extract log data out of an Office365 environment. The script created by us consist out of four main options, which enable the investigator to easily extract logging out of an Office365 environment. 
